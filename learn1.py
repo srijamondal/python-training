@@ -23,11 +23,3 @@ elif marks >= 80:
     print("B grade")
 else:
     print("C grade")
-
-# Enter marks for three students and print their total
-student1_marks = int(input("Enter marks for student 1: "))
-student2_marks = int(input("Enter marks for student 2: "))
-student3_marks = int(input("Enter marks for student 3: "))
-
-total_marks = student1_marks + student2_marks + student3_marks
-print("Total marks of the three students:", total_marks)
