@@ -111,19 +111,21 @@
 # for animal in animals:
 #     animal.sound()
 
-from abc import ABC, abstractmethod
+##################### ABSTRACT CLASS ####################
 
-class payment(ABC):
-    @abstractmethod
-    def pay(self, amount):
-        pass
-class upi(payment):
-    def pay(self, amount):
-        print(f"Payment of {amount} done using UPI")
-class card(payment):
-    def pay(self,amount):
-        print(f"Payment of {amount} done using card")
-p1=upi()
-p2=card()
-p1.pay(1000)
-p2.pay(2000)
+# from abc import ABC, abstractmethod
+
+# class payment(ABC):
+#     @abstractmethod
+#     def pay(self, amount):
+#         pass
+# class upi(payment):
+#     def pay(self, amount):
+#         print(f"Payment of {amount} done using UPI")
+# class card(payment):
+#     def pay(self,amount):
+#         print(f"Payment of {amount} done using card")
+# p1=upi()
+# p2=card()
+# p1.pay(1000)
+# p2.pay(2000)
