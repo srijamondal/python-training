@@ -9,6 +9,6 @@
 // function changecolor() {
 //     document.getElementById("title").innerHTML = "welcome to javascript";
 // }
-function changecolor() {
-    document.getElementById("title").style.color = "Pink";
-}
+// function changecolor() {
+//     document.getElementById("title").style.color = "Pink";
+// }

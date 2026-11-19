@@ -1,0 +1,337 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.7)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \c college
+You are now connected to database "college" as user "postgres".
+college=# \dt
+           List of tables
+ Schema |  Name   | Type  |  Owner
+--------+---------+-------+----------
+ public | college | table | postgres
+(1 row)
+
+
+college=# CREATE TABLE student (
+college(# id SERIAL PRIMARY KEY,
+college(# name VARCHAR(100),
+college(# age INT,
+college(# course VARCHAR(50),
+college(# marks INT);
+CREATE TABLE
+college=# \dt
+           List of tables
+ Schema |  Name   | Type  |  Owner
+--------+---------+-------+----------
+ public | college | table | postgres
+ public | student | table | postgres
+(2 rows)
+
+
+college=# \d student
+                                    Table "public.student"
+ Column |          Type          | Collation | Nullable |               Default
+--------+------------------------+-----------+----------+-------------------------------------
+ id     | integer                |           | not null | nextval('student_id_seq'::regclass)
+ name   | character varying(100) |           |          |
+ age    | integer                |           |          |
+ course | character varying(50)  |           |          |
+ marks  | integer                |           |          |
+Indexes:
+    "student_pkey" PRIMARY KEY, btree (id)
+
+
+college=# insert into student (name,age, course, marks)
+college-# values
+college-# ('rahul',20,'bca',12),
+college-# ('rohith',20,'phd',98),
+college-# ('srija',19,'MBBS',99),
+college-# ('satyam',20,'SWE',90);
+INSERT 0 4
+college=# select * from student;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  1 | rahul  |  20 | bca    |    12
+  2 | rohith |  20 | phd    |    98
+  3 | srija  |  19 | MBBS   |    99
+  4 | satyam |  20 | SWE    |    90
+(4 rows)
+
+
+college=# select * from student where marks>80;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  2 | rohith |  20 | phd    |    98
+  3 | srija  |  19 | MBBS   |    99
+  4 | satyam |  20 | SWE    |    90
+(3 rows)
+
+
+college=# select * from student order by marks asc;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  1 | rahul  |  20 | bca    |    12
+  4 | satyam |  20 | SWE    |    90
+  2 | rohith |  20 | phd    |    98
+  3 | srija  |  19 | MBBS   |    99
+(4 rows)
+
+
+college=# select * from student order by marks desc;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  3 | srija  |  19 | MBBS   |    99
+  2 | rohith |  20 | phd    |    98
+  4 | satyam |  20 | SWE    |    90
+  1 | rahul  |  20 | bca    |    12
+(4 rows)
+
+
+college=# update student
+college-# set marks = 92
+college-# where id = 4;
+UPDATE 1
+college=# select * from student;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  1 | rahul  |  20 | bca    |    12
+  2 | rohith |  20 | phd    |    98
+  3 | srija  |  19 | MBBS   |    99
+  4 | satyam |  20 | SWE    |    92
+(4 rows)
+
+
+college=# update student
+college-# set marks = CASE
+college-# when id = 1 THEN 16
+college-# when id = 4 THEN 93
+college-# when id = 3 THEN 100
+college-# when id = 2 then 98
+college-# END
+college-# where id IN(1, 2, 3, 4);
+UPDATE 4
+college=# select * from student;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  1 | rahul  |  20 | bca    |    16
+  2 | rohith |  20 | phd    |    98
+  3 | srija  |  19 | MBBS   |   100
+  4 | satyam |  20 | SWE    |    93
+(4 rows)
+
+
+college=# update student set marks = marks+5;
+UPDATE 4
+college=# select * from student
+college-# ;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  1 | rahul  |  20 | bca    |    21
+  2 | rohith |  20 | phd    |   103
+  3 | srija  |  19 | MBBS   |   105
+  4 | satyam |  20 | SWE    |    98
+(4 rows)
+
+
+college=# select * from student
+college-# limit 2;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  1 | rahul  |  20 | bca    |    21
+  2 | rohith |  20 | phd    |   103
+(2 rows)
+
+
+college=# select * student
+college-# order by marks desc
+college-# limit 2;
+ERROR:  syntax error at or near "student"
+LINE 1: select * student
+                 ^
+college=# select * from student
+college-# order bt marks desc
+college-# limit 2;
+ERROR:  syntax error at or near "bt"
+LINE 2: order bt marks desc
+              ^
+college=# select * from student
+college-# order by marks desc
+college-# limit 2;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  3 | srija  |  19 | MBBS   |   105
+  2 | rohith |  20 | phd    |   103
+(2 rows)
+
+
+college=# select count(*) from student where course=bca;
+ERROR:  column "bca" does not exist
+LINE 1: select count(*) from student where course=bca;
+                                                  ^
+college=# select count(*) from student where course='bca';
+ count
+-------
+     1
+(1 row)
+
+
+college=# select course,count(*)
+college-# from student
+college-# group by course;
+ course | count
+--------+-------
+ MBBS   |     1
+ bca    |     1
+ phd    |     1
+ SWE    |     1
+(4 rows)
+
+
+college=# select min(marks) from student;
+ min
+-----
+  21
+(1 row)
+
+
+college=# select max(marks) from student;
+ max
+-----
+ 105
+(1 row)
+
+
+college=# create table student_card(
+college(# card_id serial primary key,
+college(# card_number varchar(50),
+college(# id INT UNIQUE REFERENCES student(id);
+college(# );
+ERROR:  syntax error at or near ";"
+LINE 4: id INT UNIQUE REFERENCES student(id);
+                                            ^
+college=# CREATE TABLE student_card(
+college(# card_id SERIAL primary key,
+college(# card_number VARCHAR(50),
+college(# id INT UNIQUE REFERENCES student(id)
+college(# );
+CREATE TABLE
+college=# \d student_card;
+                                        Table "public.student_card"
+   Column    |         Type          | Collation | Nullable |                    Default
+-------------+-----------------------+-----------+----------+-----------------------------------------------
+ card_id     | integer               |           | not null | nextval('student_card_card_id_seq'::regclass)
+ card_number | character varying(50) |           |          |
+ id          | integer               |           |          |
+Indexes:
+    "student_card_pkey" PRIMARY KEY, btree (card_id)
+    "student_card_id_key" UNIQUE CONSTRAINT, btree (id)
+Foreign-key constraints:
+    "student_card_id_fkey" FOREIGN KEY (id) REFERENCES student(id)
+
+
+college=# INSERT INTO student_card(card_number, student_id)
+college-# values
+college-# ('1gd149',01),
+college-# ('1gd122',02),
+college-# ('1gd134',03),
+college-# ('1gd115',04);
+ERROR:  column "student_id" of relation "student_card" does not exist
+LINE 1: INSERT INTO student_card(card_number, student_id)
+                                              ^
+college=# INSERT INTO student_card (card_number, id)
+college-# values
+college-# ('1gd149',01),
+college-# ('1gd122',02),
+college-# ('1gd134',03),
+college-# ('1gd115',04);
+INSERT 0 4
+college=# select * from student_card;
+ card_id | card_number | id
+---------+-------------+----
+       1 | 1gd149      |  1
+       2 | 1gd122      |  2
+       3 | 1gd134      |  3
+       4 | 1gd115      |  4
+(4 rows)
+
+
+college=# drop table student_card;
+DROP TABLE
+college=# \d student_card;
+Did not find any relation named "student_card".
+college=# create table departments(
+college(# department_id serial primary key,
+college(# department_name varchar(100) );
+CREATE TABLE
+college=# \d departments;
+                                              Table "public.departments"
+     Column      |          Type          | Collation | Nullable |                      Default
+-----------------+------------------------+-----------+----------+----------------------------------------------------
+ department_id   | integer                |           | not null | nextval('departments_department_id_seq'::regclass)
+ department_name | character varying(100) |           |          |
+Indexes:
+    "departments_pkey" PRIMARY KEY, btree (department_id)
+
+
+college=# insert into departments(department_name)
+college-# values
+college-# ('GYNO')
+college-# ('PHYSIO')
+college-# ('CARDIO')
+college-# ('SURGEN')
+college-# ('NEURO');
+ERROR:  syntax error at or near "("
+LINE 4: ('PHYSIO')
+        ^
+college=# insert into departments(department_name)
+college-# values
+college-# ('GYNO'),
+college-# ('PHYSIO'),
+college-# ('CARDIO'),
+college-# ('SURGEN'),
+college-# ('NEURO');
+INSERT 0 5
+college=# select * from depatments;
+ERROR:  relation "depatments" does not exist
+LINE 1: select * from depatments;
+                      ^
+college=# select * from departments;
+ department_id | department_name
+---------------+-----------------
+             1 | GYNO
+             2 | PHYSIO
+             3 | CARDIO
+             4 | SURGEN
+             5 | NEURO
+(5 rows)
+
+
+college=# create table new(
+college(# employee_id serial primary key,
+college(# employee_name varchar(100),
+college(# salary int,
+college(# department_id INT REFERENCES departments(department_id)
+college(# );
+CREATE TABLE
+college=# \d employee;
+Did not find any relation named "employee".
+college=# \d new;
+                                            Table "public.new"
+    Column     |          Type          | Collation | Nullable |                 Default
+---------------+------------------------+-----------+----------+------------------------------------------
+ employee_id   | integer                |           | not null | nextval('new_employee_id_seq'::regclass)
+ employee_name | character varying(100) |           |          |
+ salary        | integer                |           |          |
+ department_id | integer                |           |          |
+Indexes:
+    "new_pkey" PRIMARY KEY, btree (employee_id)
+Foreign-key constraints:
+    "new_department_id_fkey" FOREIGN KEY (department_id) REFERENCES departments(department_id)
