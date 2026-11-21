@@ -1,0 +1,31 @@
+
+
+
+{% extends 'movies/base.html' %}
+
+{% block title %}Edit Review - Mini CineRate{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card card-dark p-4">
+            <h2 class="text-warning mb-1">Edit Review</h2>
+            <p class="text-secondary">for <strong>{{ review.movie.title }}</strong></p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Rating <span id="rating-preview" class="rating"></span></label>
+                    {{ form.rating }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Comment</label>
+                    {{ form.comment }}
+                </div>
+                <button type="submit" class="btn btn-warning">Save Changes</button>
+                <a href="{% url 'movie_detail' review.movie.id %}" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

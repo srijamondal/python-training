@@ -1,0 +1,82 @@
+
+
+
+
+{% extends 'movies/base.html' %}
+
+{% block title %}{{ movie.title }} - Mini CineRate{% endblock %}
+
+{% block content %}
+<a href="{% url 'home' %}" class="text-warning text-decoration-none">&larr; Back to movies</a>
+
+<div class="row mt-3">
+    <div class="col-md-4 mb-4">
+        {% if movie.poster %}
+            <img src="{{ movie.poster.url }}" class="img-fluid rounded" alt="{{ movie.title }}">
+        {% else %}
+            <div class="poster-placeholder rounded">🎬</div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-8">
+        <h1 class="text-warning">{{ movie.title }}</h1>
+        <p class="text-secondary">
+            <span class="badge bg-secondary">{{ movie.release_year }}</span>
+            <span class="badge bg-dark border border-warning text-warning">{{ movie.genre }}</span>
+        </p>
+        <p class="rating fs-4">★ {{ movie.average_rating }} / 5
+            <small class="text-secondary fs-6">({{ reviews.count }} review{{ reviews.count|pluralize }})</small>
+        </p>
+        <p>{{ movie.description }}</p>
+    </div>
+</div>
+
+<hr class="border-secondary my-4">
+
+<!-- Review form -->
+<h3 class="mb-3">Write a Review</h3>
+{% if user.is_authenticated %}
+    {% if user_review %}
+        <div class="alert alert-dark border-warning">
+            You already reviewed this movie.
+            <a href="{% url 'edit_review' user_review.id %}" class="text-warning">Edit your review</a>
+        </div>
+    {% else %}
+        <form method="post" class="card card-dark p-3 mb-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Rating <span id="rating-preview" class="rating"></span></label>
+                {{ form.rating }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Comment</label>
+                {{ form.comment }}
+            </div>
+            <button type="submit" class="btn btn-warning">Submit Review</button>
+        </form>
+    {% endif %}
+{% else %}
+    <p class="text-secondary">
+        <a href="{% url 'login' %}" class="text-warning">Login</a> to write a review.
+    </p>
+{% endif %}
+
+<!-- Reviews list -->
+<h3 class="mb-3">User Reviews</h3>
+{% for review in reviews %}
+    <div class="review-box">
+        <div class="d-flex justify-content-between">
+            <strong>{{ review.user.username }}</strong>
+            <span class="rating">{% for i in "12345" %}{% if i|add:"0" <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</span>
+        </div>
+        <small class="text-secondary">{{ review.created_at|date:"d M Y" }}</small>
+        <p class="mt-2 mb-2">{{ review.comment }}</p>
+        {% if review.user == user %}
+            <a href="{% url 'edit_review' review.id %}" class="btn btn-sm btn-outline-warning">Edit</a>
+            <a href="{% url 'delete_review' review.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        {% endif %}
+    </div>
+{% empty %}
+    <p class="text-secondary">No reviews yet. Be the first to review!</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,72 @@
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.movie-card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    transition: transform 0.2s;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    border-color: #ffc107;
+}
+
+.movie-poster {
+    height: 350px;
+    object-fit: cover;
+}
+
+.poster-placeholder {
+    height: 350px;
+    background-color: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 3rem;
+}
+
+.rating {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.review-box {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-control, .form-select {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #2a2a2a;
+    color: #fff;
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+}
+
+.form-control::placeholder {
+    color: #888;
+}
+
+.card-dark {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+}

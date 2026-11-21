@@ -1,0 +1,26 @@
+
+
+
+
+{% extends 'movies/base.html' %}
+
+{% block title %}Delete Review - Mini CineRate{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card card-dark p-4 text-center">
+            <h2 class="text-danger mb-3">Delete Review?</h2>
+            <p>Are you sure you want to delete your review for
+               <strong class="text-warning">{{ review.movie.title }}</strong>?</p>
+            <p class="text-secondary fst-italic">"{{ review.comment|truncatechars:80 }}"</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                <a href="{% url 'movie_detail' review.movie.id %}" class="btn btn-outline-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
